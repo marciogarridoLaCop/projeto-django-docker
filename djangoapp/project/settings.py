@@ -23,17 +23,25 @@ DATA_DIR = BASE_DIR.parent / 'data' / 'web'
 SECRET_KEY = os.getenv('SECRET_KEY', 'change-me')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(int(os.getenv('DEBUG', 0)))
+DEBUG = bool(int(os.getenv('DEBUG', '0')))
 
 ALLOWED_HOSTS = [
     h.strip() for h in os.getenv('ALLOWED_HOSTS', '').split(',')
     if h.strip()
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    f'https://{h.strip()}' for h in os.getenv('ALLOWED_HOSTS', '').split(',')
+    if h.strip() and h.strip() not in ('127.0.0.1', 'localhost')
+]
+
 
 # Application definition
 
 INSTALLED_APPS = [
+    'unfold',
+    'unfold.contrib.filters',
+    'unfold.contrib.forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,6 +53,79 @@ INSTALLED_APPS = [
     'device',
     'datalogsensor',
 ]
+
+UNFOLD = {
+    "SITE_TITLE": "Painel de Sensores",
+    "SITE_HEADER": "Painel de Sensores",
+    "SITE_URL": "/",
+    "SITE_SYMBOL": "sensors",
+    "SHOW_HISTORY": True,
+    "SHOW_VIEW_ON_SITE": True,
+    "COLORS": {
+        "primary": {
+            "50":  "240 249 255",
+            "100": "224 242 254",
+            "200": "186 230 253",
+            "300": "125 211 252",
+            "400": "56  189 248",
+            "500": "14  165 233",
+            "600": "2   132 199",
+            "700": "3   105 161",
+            "800": "7   89  133",
+            "900": "12  74  110",
+            "950": "8   47  73",
+        },
+    },
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": True,
+        "navigation": [
+            {
+                "title": "Dispositivos",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Tipos de Sensor",
+                        "icon": "category",
+                        "link": "/admin/device/tipo/",
+                    },
+                    {
+                        "title": "Sensores",
+                        "icon": "sensors",
+                        "link": "/admin/device/sensor/",
+                    },
+                ],
+            },
+            {
+                "title": "Registros",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "DataLog Sensor",
+                        "icon": "data_table",
+                        "link": "/admin/datalogsensor/registro/",
+                    },
+                ],
+            },
+            {
+                "title": "Administração",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Usuários",
+                        "icon": "person",
+                        "link": "/admin/auth/user/",
+                    },
+                    {
+                        "title": "Grupos",
+                        "icon": "group",
+                        "link": "/admin/auth/group/",
+                    },
+                ],
+            },
+        ],
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
