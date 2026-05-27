@@ -30,11 +30,6 @@ ALLOWED_HOSTS = [
     if h.strip()
 ]
 
-CSRF_TRUSTED_ORIGINS = [
-    f'https://{h.strip()}' for h in os.getenv('ALLOWED_HOSTS', '').split(',')
-    if h.strip() and h.strip() not in ('127.0.0.1', 'localhost')
-]
-
 
 # Application definition
 
