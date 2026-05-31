@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Tipo(models.Model):
@@ -12,6 +13,7 @@ class Tipo(models.Model):
 
 
 class Sensor(models.Model):
+    cliente = models.ForeignKey(User, null=True, blank=False, on_delete=models.CASCADE, verbose_name='Cliente')
     sensor = models.CharField(max_length=30, blank=False, verbose_name='Nome do Sensor')
     tipo = models.ForeignKey(Tipo, blank=False, on_delete=models.CASCADE)
     local = models.CharField(max_length=30, blank=False, null=False, verbose_name='Local de Instalação')

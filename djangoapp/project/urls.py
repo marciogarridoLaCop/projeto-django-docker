@@ -21,8 +21,11 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),
+    path('conta/', include('accounts.urls')),
     path('api/device/', include('device.urls')),
     path('api/datalogsensor/', include('datalogsensor.urls')),
+    path('', include('datalogsensor.web_urls')),
 ]
 
 if settings.DEBUG:

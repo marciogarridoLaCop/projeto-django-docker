@@ -7,10 +7,14 @@ from .serializers import RegistroSerializer, VisualizarRegistroSerializer, Regis
 
 
 class RegistroViewSet(viewsets.ModelViewSet):
-    queryset = Registro.objects.all()
     serializer_class = RegistroSerializer
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Registro.objects.all()
+        return Registro.objects.filter(Sensor__cliente=self.request.user)
 
 
 class ListaRegistro(generics.ListAPIView):
@@ -22,4 +26,7 @@ class ListaRegistro(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Registro.objects.filter(Sensor_id=self.kwargs['pk'])
+        qs = Registro.objects.filter(Sensor_id=self.kwargs['pk'])
+        if self.request.user.is_superuser:
+            return qs
+        return qs.filter(Sensor__cliente=self.request.user)
